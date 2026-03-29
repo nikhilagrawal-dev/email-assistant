@@ -20,6 +20,8 @@ public class EmailRequest {
     @NotNull(message = "Length is required")
     private Length length;
 
+    private String customPrompt;
+
     public enum Tone {
         FORMAL,
         CASUAL

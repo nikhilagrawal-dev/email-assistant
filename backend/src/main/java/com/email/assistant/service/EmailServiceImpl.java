@@ -32,10 +32,14 @@ public class EmailServiceImpl implements EmailService {
         String length = request.getLength() != null ? request.getLength().toString().toLowerCase() : "short";
 
         // 🔥 PROMPT
-        String prompt = "You are an AI email assistant.\n\n"
-                + "Write a " + tone + " and " + length + " reply.\n\n"
-                + "Email:\n"
-                + request.getEmailContent();
+        StringBuilder promptBuilder = new StringBuilder("You are an AI email assistant.\n\n");
+        if (request.getCustomPrompt() != null && !request.getCustomPrompt().trim().isEmpty()) {
+            promptBuilder.append("USER INSTRUCTIONS: ").append(request.getCustomPrompt()).append("\n\n");
+        }
+        promptBuilder.append("Write a ").append(tone).append(" and ").append(length).append(" reply to the following email.\n\n");
+        promptBuilder.append("Email:\n").append(request.getEmailContent());
+        
+        String prompt = promptBuilder.toString();
 
         // ✅ GEMINI REQUEST BODY
         Map<String, Object> requestBody = Map.of(
